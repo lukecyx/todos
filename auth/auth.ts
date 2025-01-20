@@ -6,6 +6,7 @@ import { USER_COOKIE_NAME } from "~/constants";
 import { type Cookie } from "~/types/auth";
 
 import db from "~/db/db";
+import { redirect } from "next/navigation";
 
 export async function registerUser(email: string, password: string) {
   const userExists = await db.user.findFirst({
@@ -77,26 +78,39 @@ function comparePasswords(plain: string, hash: string) {
   return bcrypt.compare(plain, hash);
 }
 
-export function getUserFromToken(token: Cookie) {
+async function getUserFromToken(token: Cookie) {
   if (!token) return;
 
-  return jwt.verify(
+  const payload = jwt.verify(
     token.value,
     process.env.JWT_SECRET_KEY as unknown as string,
-  );
+  ) as { id: string };
+
+  return await db.user.findFirst({
+    where: {
+      id: payload.id,
+    },
+  });
+}
+
+export async function isUserLoggedIn() {
+  return !!(await cookies()).get(USER_COOKIE_NAME);
 }
 
 export async function getCurrentUser() {
   const userToken = (await cookies()).get(USER_COOKIE_NAME) as Cookie;
-  const userFromToken = getUserFromToken(userToken) as { id: string };
-  const user = await db.user.findFirst({
-    where: {
-      id: userFromToken.id as string,
-    },
-  });
+
+  if (!userToken) {
+    redirect("/login");
+  }
+
+  const userFromToken = await getUserFromToken(userToken);
+  if (!userFromToken) {
+    redirect("login");
+  }
 
   //eslint-disable-next-line
-  const { password: _, ...retUser } = user!;
+  const { password: _, ...retUser } = userFromToken;
 
   return retUser;
 }

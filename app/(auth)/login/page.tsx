@@ -1,6 +1,6 @@
 import LoginForm from "~/app/components/auth/LoginForm";
 
-function LoginPage() {
+async function LoginPage() {
   return (
     <div className="flex justify-center">
       <LoginForm />
