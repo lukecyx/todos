@@ -1,0 +1,102 @@
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+import { cookies } from "next/headers";
+import { USER_COOKIE_NAME } from "~/constants";
+import { type Cookie } from "~/types/auth";
+
+import db from "~/db/db";
+
+export async function registerUser(email: string, password: string) {
+  const userExists = await db.user.findFirst({
+    where: {
+      email,
+    },
+  });
+
+  if (userExists) {
+    throw new Error("User already exists");
+  }
+
+  const newUser = await db.user.create({
+    data: {
+      email,
+      password: hashPassword(password),
+    },
+  });
+
+  // eslint-disable-next-line
+  const { password: _, ...retUser } = newUser;
+
+  return {
+    user: retUser,
+    token: createToken(newUser.id),
+  };
+}
+
+export async function loginUser(email: string, password: string) {
+  const userExists = await db.user.findFirst({
+    where: {
+      email,
+    },
+  });
+
+  if (!userExists) {
+    throw new Error("User does not exist");
+  }
+
+  const match = comparePasswords(password, userExists.password);
+
+  if (!match) {
+    throw new Error("User does not exist");
+  }
+
+  // eslint-disable-next-line
+  const { password: _, ...retUser } = userExists;
+  return {
+    user: retUser,
+    token: createToken(userExists.id),
+  };
+}
+
+function hashPassword(password: string) {
+  return bcrypt.hashSync(password, 10);
+}
+
+function createToken(userId: string) {
+  return jwt.sign(
+    { user: userId },
+    process.env.JWT_SECRET_KEY as unknown as string,
+    {
+      expiresIn: "1h",
+    },
+  );
+}
+
+function comparePasswords(plain: string, hash: string) {
+  return bcrypt.compare(plain, hash);
+}
+
+export function getUserFromToken(token: Cookie) {
+  if (!token) return;
+
+  return jwt.verify(
+    token.value,
+    process.env.JWT_SECRET_KEY as unknown as string,
+  );
+}
+
+export async function getCurrentUser() {
+  const userToken = (await cookies()).get(USER_COOKIE_NAME) as Cookie;
+  const userFromToken = getUserFromToken(userToken) as { id: string };
+  const user = await db.user.findFirst({
+    where: {
+      id: userFromToken.id as string,
+    },
+  });
+
+  //eslint-disable-next-line
+  const { password: _, ...retUser } = user!;
+
+  return retUser;
+}
