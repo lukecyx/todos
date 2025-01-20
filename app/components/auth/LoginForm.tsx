@@ -6,6 +6,7 @@ import { clsx } from "clsx";
 import { loginAction } from "~/actions/auth/login";
 import OpenEyeIcon from "~/app/components/icons/Eye";
 import ClosedEyeSlashIcon from "~/app/components/icons/EyeSlash";
+import Link from "next/link";
 
 function LoginForm() {
   const [state, action, pending] = useActionState(loginAction, null);
@@ -16,6 +17,17 @@ function LoginForm() {
   function togglePasswordVisibility() {
     setShowPassword((prev) => !prev);
   }
+
+  const links = [
+    {
+      label: "Forgot Passowrd?",
+      href: "/resetPassword",
+    },
+    {
+      label: "Create Account",
+      href: "/register",
+    },
+  ];
 
   return (
     <div className="w-2/3 flex-col border bg-slate-100 p-4 lg:flex  lg:w-1/3">
@@ -87,8 +99,19 @@ function LoginForm() {
               className="w-full rounded bg-indigo-500 p-2 font-semibold text-white shadow-sm hover:bg-indigo-700 focus:border-indigo-700 focus:outline-indigo-700 focus:ring-4 focus:ring-indigo-700"
               type="submit"
             >
-              {pending ? "Loading..." : "Register"}
+              {pending ? "Loading..." : "Login"}
             </button>
+          </div>
+          <div className="flex justify-between font-normal">
+            {links.map((link) => (
+              <Link
+                key={link.label}
+                className="text-indigo-500 hover:text-indigo-700"
+                href={link.href}
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
         </div>
       </form>
