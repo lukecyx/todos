@@ -46,7 +46,7 @@ export async function loginUser(email: string, password: string) {
     throw new Error("User does not exist");
   }
 
-  const match = comparePasswords(password, userExists.password);
+  const match = await comparePasswords(password, userExists.password);
 
   if (!match) {
     throw new Error("User does not exist");
