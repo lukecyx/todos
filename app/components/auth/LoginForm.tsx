@@ -12,6 +12,7 @@ function LoginForm() {
   const [state, action, pending] = useActionState(loginAction, null);
   const invalidPassword = state?.fieldErrors?.password;
   const invalidEmail = state?.fieldErrors?.email;
+  const formErrors = state?.formErrors;
   const [showPassword, setShowPassword] = useState(false);
 
   function togglePasswordVisibility() {
@@ -67,7 +68,6 @@ function LoginForm() {
                   )}
                   type={showPassword ? "text" : "password"}
                   minLength={8}
-                  pattern="^(?=.*[\d@£$!%*?&])[A-Za-z\d@£$!%*?&]{8,32}$"
                   title="Password must be 8-32 characters long and include at least one number or one special character (@, £, $, !, %, *, ?, &)."
                   autoComplete="current-password"
                   required
@@ -89,6 +89,15 @@ function LoginForm() {
               {invalidPassword &&
                 invalidPassword.map((error, idx) => (
                   <p className="text-sm text-red-500" key={idx}>
+                    {error}
+                  </p>
+                ))}
+              {formErrors &&
+                formErrors.map((error, idx) => (
+                  <p
+                    className="text-sm flex justify-center pt-4 text-red-500"
+                    key={idx}
+                  >
                     {error}
                   </p>
                 ))}

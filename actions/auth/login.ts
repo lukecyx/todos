@@ -20,12 +20,17 @@ export async function loginAction(_: unknown, formData: unknown) {
   const result = loginUserSchema.safeParse(userObj);
 
   if (!result.success) {
-    return result.error.formErrors;
+    return {
+      fieldErrors: result.error.flatten().fieldErrors,
+    } as const;
   }
 
-  const { token } = await loginUser(userObj.email, userObj.password);
-
-  (await cookies()).set(USER_COOKIE_NAME, token);
+  try {
+    const { token } = await loginUser(userObj.email, userObj.password);
+    (await cookies()).set(USER_COOKIE_NAME, token);
+  } catch (error) {
+    return { formErrors: [(error as Error).message] } as const;
+  }
 
   redirect("/todos");
 }
