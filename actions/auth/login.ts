@@ -29,7 +29,9 @@ export async function loginAction(_: unknown, formData: unknown) {
     const { token } = await loginUser(userObj.email, userObj.password);
     (await cookies()).set(USER_COOKIE_NAME, token);
   } catch (error) {
-    return { formErrors: [(error as Error).message] } as const;
+    const err = error as Error;
+    console.error(err.stack ?? err.message);
+    return { formErrors: ["Login failed"] };
   }
 
   redirect("/todos");
