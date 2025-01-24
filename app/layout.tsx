@@ -31,7 +31,7 @@ export default function RootLayout({
         <header>
           <Nav />
         </header>
-        <main>{children}</main>
+        <main className="flex justify-center">{children}</main>
       </body>
     </html>
   );
