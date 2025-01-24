@@ -1,20 +1,13 @@
+"use client";
+
+import { useActionState } from "react";
+import { submitTodo } from "~/actions/todos/submitTodo";
 function TodoForm() {
-  async function onSubmit(formData: FormData) {
-    "use server";
-
-    const t = Object.fromEntries(formData);
-    console.log("t", t);
-    // const result = api.todo.create.useMutation();
-    // result.mutateAsync();
-
-    // console.log(result);
-  }
-
-  // TODO: Should be for authed users only.
+  const [prevState, action, pending] = useActionState(submitTodo, null);
 
   return (
-    <div className="lg: flex w-2/3 flex-col border bg-slate-50 shadow-md lg:w-1/3">
-      <form className="p-4" action={onSubmit}>
+    <div className="flex flex-col border bg-slate-50 shadow-md">
+      <form className="p-4" action={action}>
         <div className="space-y-4">
           <div className="space-y-2">
             <div className="flex flex-col">
