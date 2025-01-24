@@ -18,8 +18,8 @@ async function Nav() {
   return (
     <nav className="w-full  p-4">
       <div className="flex justify-between">
-        <div className="flex flex-row">
-          <ul className="flex flex-row space-x-4">
+        <div>
+          <ul className="flex flex-row space-x-2">
             {leftLinks.map((link) => (
               <li key={link.label}>
                 <NavLink label={link.label} href={link.href} />
@@ -29,11 +29,13 @@ async function Nav() {
         </div>
         <div className="flex">
           <ul>
-            {userHasSession ? (
-              <NavLink label="My Account" href={"/myaccount"} />
-            ) : (
-              <NavLink label="Login" href={"/login"} />
-            )}
+            <li>
+              {userHasSession ? (
+                <NavLink label="My Account" href={"/myaccount"} />
+              ) : (
+                <NavLink label="Login" href={"/login"} />
+              )}
+            </li>
           </ul>
         </div>
       </div>

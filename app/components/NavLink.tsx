@@ -15,7 +15,7 @@ function NavLink(props: NavLinkProps) {
   return (
     <Link
       className={clsx(
-        "text-xl font-semibold text-gray-800 decoration-4 hover:text-indigo-600 hover:underline hover:underline-offset-4 focus:outline-0 focus-visible:ring-2 focus-visible:ring-indigo-600",
+        "pl-2 pr-2 text-xl font-semibold text-gray-800 decoration-4 hover:text-indigo-600 hover:underline hover:underline-offset-4 focus:outline-0 focus-visible:ring-2 focus-visible:ring-indigo-600",
         {
           "border-b-4 border-indigo-600 pb-2 transition-all": isActiveLink(
             pathname,
