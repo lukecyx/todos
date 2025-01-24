@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt, { TokenExpiredError } from "jsonwebtoken";
 
 import { cookies } from "next/headers";
 import { USER_COOKIE_NAME } from "~/constants";
@@ -81,14 +81,22 @@ function comparePasswords(plain: string, hash: string) {
 async function getUserFromToken(token: Cookie) {
   if (!token) return;
 
-  const payload = jwt.verify(
-    token.value,
-    process.env.JWT_SECRET_KEY as unknown as string,
-  ) as { id: string };
+  let payload;
+  // TODO: Handle this properly.
+  try {
+    payload = jwt.verify(
+      token.value,
+      process.env.JWT_SECRET_KEY as unknown as string,
+    ) as { id: string };
+  } catch (error) {
+    if (error instanceof TokenExpiredError) {
+      redirect("/login");
+    }
+  }
 
   return await db.user.findFirst({
     where: {
-      id: payload.id,
+      id: payload?.id,
     },
   });
 }
