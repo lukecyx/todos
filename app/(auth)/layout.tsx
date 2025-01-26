@@ -1,6 +1,6 @@
 function authLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <div>
+    <div className="container lg:w-2/3">
       <div>{children}</div>
     </div>
   );

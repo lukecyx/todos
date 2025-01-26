@@ -60,7 +60,7 @@ export async function loginUser(email: string, password: string) {
   };
 }
 
-function hashPassword(password: string) {
+export function hashPassword(password: string) {
   return bcrypt.hashSync(password, 10);
 }
 
