@@ -12,20 +12,37 @@ export async function registerAction(_: unknown, formData: unknown) {
     throw new Error("No formData");
   }
 
-  const userObj = {
-    email: formData.get("email") as string,
-    password: formData.get("password") as string,
-  };
+  const formDataAsObj = Object.fromEntries(formData.entries());
 
-  const result = registerUserSchema.safeParse(userObj);
-
-  if (!result.success) {
-    return result.error.formErrors;
+  if (formDataAsObj.password !== formDataAsObj.confirmPassword) {
+    return {
+      fieldErrors: {
+        password: ["Passwords do not match"],
+        confirmPassword: ["Passwords do not match"],
+      },
+    };
   }
 
-  const { token } = await registerUser(userObj.email, userObj.password);
+  const result = registerUserSchema.safeParse(formDataAsObj);
 
-  (await cookies()).set(USER_COOKIE_NAME, token);
+  if (!result.success) {
+    return {
+      fieldErrors: result.error.flatten().fieldErrors,
+    };
+  }
 
-  redirect("/");
+  try {
+    const { token } = await registerUser(
+      result.data.email,
+      result.data.password,
+    );
+    (await cookies()).set(USER_COOKIE_NAME, token);
+  } catch (error) {
+    const err = error as Error;
+    console.error(err.stack ?? err.message);
+
+    return { formErrors: ["Sign up failed"] };
+  }
+
+  redirect("/todos");
 }
