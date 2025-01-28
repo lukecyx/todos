@@ -31,7 +31,7 @@ function LoginForm() {
   ];
 
   return (
-    <div className="w-2/3 flex-col border bg-slate-100 p-4 lg:flex  lg:w-1/3">
+    <div className="w-full flex-col border bg-slate-100 p-4 lg:flex lg:w-2/3">
       <form action={action}>
         <div className="flex flex-col space-y-4 font-bold">
           <div className="flex flex-col space-y-2">
@@ -95,7 +95,7 @@ function LoginForm() {
               {formErrors &&
                 formErrors.map((error, idx) => (
                   <p
-                    className="text-sm flex justify-center pt-4 text-red-500"
+                    className="flex justify-center pt-4 text-sm text-red-500"
                     key={idx}
                   >
                     {error}
