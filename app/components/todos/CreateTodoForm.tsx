@@ -1,14 +1,23 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { submitTodo } from "~/actions/todos/submitTodo";
+import DatePicker from "../DatePicker/DatePicker";
+import CalendarIcon from "../icons/Calendar";
+import { Popover } from "@headlessui/react";
+import { DateTime } from "luxon";
+
 function TodoForm() {
   const [prevState, action, pending] = useActionState(submitTodo, null);
+  const [selectedDate, setSelectedDate] = useState("");
+  const handleDateChange = (newDate: DateTime) => {
+    setSelectedDate(newDate.toString());
+  };
 
   return (
     <div className="flex flex-col border bg-slate-50 shadow-md">
       <form className="p-4" action={action}>
-        <div className="space-y-2">
+        <div className="mb-8 space-y-2">
           <label className="sr-only" htmlFor="title">
             Title
           </label>
@@ -31,6 +40,21 @@ function TodoForm() {
             placeholder="Description"
           />
         </div>
+        <input type="hidden" name="completedByDate" value={selectedDate} />
+        <Popover>
+          <Popover.Button>
+            <div className="flex flex-row items-center space-x-2">
+              <CalendarIcon className="h-4" />
+              <span className="text-sm font-bold">
+                {DateTime.fromISO(selectedDate).toRelative()}
+              </span>
+            </div>
+          </Popover.Button>
+          <Popover.Panel className="w-80 p-2 shadow">
+            <DatePicker dateHandler={handleDateChange} />
+          </Popover.Panel>
+        </Popover>
+
         <div className="mt-8">
           <div className="flex justify-end space-x-2">
             <button
