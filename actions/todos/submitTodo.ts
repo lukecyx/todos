@@ -9,6 +9,8 @@ export async function submitTodo(_: unknown, formData: unknown) {
     throw new Error("No formData");
   }
 
+  console.log("in action ", Object.fromEntries(formData.entries()));
+
   const todoObj = {
     title: formData.get("title"),
     description: formData.get("description"),
