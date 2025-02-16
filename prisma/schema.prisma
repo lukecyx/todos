@@ -19,14 +19,15 @@ model User {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  todos Todo[]
+  todos     Todo[]
 }
 
 model Todo {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   title       String
   description String? // @db.Text
-  createdBy   User @relation(fields: [userId], references: [id]) 
-  userId String
-  createdAt   DateTime @default(now())
+  createdBy   User      @relation(fields: [userId], references: [id])
+  userId      String
+  createdAt   DateTime  @default(now())
+  dueDate     DateTime?
 }
