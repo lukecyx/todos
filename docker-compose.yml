@@ -1,21 +1,20 @@
 services:
-  app:
-    build:
-      dockerfile: Dockerfile
-      context: .
-    depends_on:
-      db:
-        condition: service_healthy
-        restart: true
-    ports:
-      - "3000:3000"
-      - "5555:5555"
-    volumes:
-      - .:/app
-      - /app/node_modules
-    environment:
-      - NODE_ENV=development
-      - DATABASE_URL=${DATABASE_URL}
+  # app:
+  #   build:
+  #     dockerfile: Dockerfile
+  #     context: .
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #       restart: true
+  #   ports:
+  #     - "3000:3000"
+  #     - "5555:5555"
+  #   volumes:
+  #     - .:/app - /app/node_modules
+  #   environment:
+  #     - NODE_ENV=development
+  #     - DATABASE_URL=${DATABASE_URL}
   db:
     image: postgres:17.2-alpine
     healthcheck:
@@ -32,7 +31,20 @@ services:
       - "5432:5432"
     volumes:
       - db:/var/lib/postgresql/data
-
+  localstack:
+    image: localstack/localstack:latest
+    ports:
+      - "4566:4566"
+      - "4510-4559:4510-4559"
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - SERVICES=ses
+      - DEBUG=1
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - localstack_data:/var/lib/localstack
 volumes:
   db:
+    driver: local
+  localstack_data:
     driver: local

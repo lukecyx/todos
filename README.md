@@ -82,3 +82,11 @@ Prisma Studio is up on http://localhost:5555
 5. Go to [localhost:5555](http://localhost:5555)
 6. Click Users
 7. Copy email from a user
+
+## Sending Emails
+
+### Prerequisites
+
+- [awslocal](https://docs.localstack.cloud/user-guide/integrations/aws-cli/#localstack-aws-cli-awslocal)
+
+Emails are simulated by using localstack.
