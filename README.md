@@ -90,3 +90,7 @@ Prisma Studio is up on http://localhost:5555
 - [awslocal](https://docs.localstack.cloud/user-guide/integrations/aws-cli/#localstack-aws-cli-awslocal)
 
 Emails are simulated by using localstack.
+
+## Architecture
+
+![Architecture Diagram](./architecture-2025-03-15-1703.png)

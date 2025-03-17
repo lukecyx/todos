@@ -9,8 +9,12 @@ variable "ses_email_sender" {
   type        = string
 }
 
-variable "ses_domain_identity" {
+variable "domain_name" {
   description = "The name of the domain"
   type        = string
 }
 
+variable "project" {
+  description = "The name of the project"
+  type        = string
+}
