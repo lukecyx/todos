@@ -25,14 +25,17 @@ async function TodoPage() {
         </div>
       </div>
       <div>
+        {/* TODO: handle todos empty state */}
         {todos &&
           todos.map((todo) => (
             <Todo
               key={todo.id}
+              id={todo.id}
               title={todo.title}
               description={todo.description ?? undefined}
             />
           ))}
+
         <TodoForm />
       </div>
     </div>
