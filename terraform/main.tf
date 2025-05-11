@@ -18,4 +18,25 @@ module "postgres" {
   private_subnet_ids = module.network.private_subnet_ids
   vpc_id             = module.network.vpc_id
   ingress_cidr_block = module.network.vpc_cidr_block
+  ec2_sg_id          = module.ec2.ec2_sg_id
+}
+
+module "budgets" {
+  source              = "./budgets"
+  billing_alarm_email = var.billing_alarm_email
+}
+
+# module "bastion" {
+#   source  = "./bastion"
+#   project = var.project
+#   vpc_id  = module.network.vpc_id
+#   subnet  = module.network.public_subnet_ids[0]
+# }
+
+module "ec2" {
+  source     = "./ec2"
+  project    = var.project
+  subnet_ids = module.network.private_subnet_ids
+  vpc_id     = module.network.vpc_id
+  depends_on = [module.network]
 }

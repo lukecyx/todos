@@ -17,3 +17,8 @@ variable "ingress_cidr_block" {
   description = "The cidr block for the ingress"
   type        = string
 }
+
+variable "ec2_sg_id" {
+  type = string
+}
+

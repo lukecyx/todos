@@ -93,4 +93,4 @@ Emails are simulated by using localstack.
 
 ## Architecture
 
-![Architecture Diagram](./architecture-2025-03-15-1703.png)
+![Architecture Diagram](./architecture.png)

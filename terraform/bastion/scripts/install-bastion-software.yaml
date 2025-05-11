@@ -1,0 +1,6 @@
+#cloud-config
+packages:
+  - git
+  - postgresql17
+runcmd:
+  - echo "Installation complete" > /var/log/custom-script.log

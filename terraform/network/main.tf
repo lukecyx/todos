@@ -1,4 +1,3 @@
-
 data "aws_availability_zones" "available" {}
 
 resource "aws_vpc" "main" {
@@ -115,3 +114,52 @@ resource "aws_route_table_association" "public_az3" {
   subnet_id      = aws_subnet.public_az3.id
   route_table_id = aws_route_table.public.id
 }
+
+# NAT
+resource "aws_eip" "nat_eip" {
+  domain     = "vpc"
+  depends_on = [aws_internet_gateway.igw]
+
+  tags = {
+    Name = "${var.project}_nat_eip"
+  }
+}
+
+resource "aws_nat_gateway" "nat" {
+  allocation_id = aws_eip.nat_eip.id
+  subnet_id     = aws_subnet.public_az1.id
+  depends_on    = [aws_internet_gateway.igw]
+  tags = {
+    Name = "${var.project}_nat"
+  }
+}
+
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "${var.project}_private_route_table"
+  }
+}
+
+resource "aws_route" "vpc_private_route" {
+  route_table_id         = aws_route_table.private.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.nat.id
+}
+
+resource "aws_route_table_association" "private_az1" {
+  subnet_id      = aws_subnet.private_az1.id
+  route_table_id = aws_route_table.private.id
+}
+
+resource "aws_route_table_association" "private_az2" {
+  subnet_id      = aws_subnet.private_az2.id
+  route_table_id = aws_route_table.private.id
+}
+
+resource "aws_route_table_association" "private_az3" {
+  subnet_id      = aws_subnet.private_az3.id
+  route_table_id = aws_route_table.private.id
+}
+
