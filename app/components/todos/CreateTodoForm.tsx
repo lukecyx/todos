@@ -14,11 +14,39 @@ type TodoFormProps = {
 };
 
 function TodoForm(props: TodoFormProps) {
-  const [prevState, action, pending] = useActionState(submitTodo, null);
-  const [selectedDate, setSelectedDate] = useState("");
+  const [prevState, action, pending] = useActionState(submitTodo, null); //eslint-disable-line
+  const [selectedDate, setSelectedDate] = useState(DateTime.now().toString());
+
   const handleDateChange = (newDate: DateTime) => {
     setSelectedDate(newDate.toString());
   };
+
+  function parseRelativeSelectedDate(
+    selectedDate: string | null,
+  ): string | null {
+    if (!selectedDate) {
+      return null;
+    }
+
+    if (!DateTime.fromISO(selectedDate).isValid) {
+      return null;
+    }
+    const selAsDT = DateTime.fromISO(selectedDate);
+    const isToday = selAsDT.toISODate() === DateTime.now().toISODate();
+
+    if (isToday) {
+      return "Today";
+    }
+
+    const selAsDTRelative = selAsDT.toRelativeCalendar();
+    if (selAsDTRelative === "tomorrow") {
+      return (
+        selAsDTRelative.slice(0, 1).toUpperCase() + selAsDTRelative.slice(1)
+      );
+    }
+
+    return selAsDTRelative;
+  }
 
   return (
     <div className="flex flex-col border bg-slate-50 shadow-md">
@@ -52,7 +80,7 @@ function TodoForm(props: TodoFormProps) {
             <div className="flex flex-row items-center space-x-2">
               <CalendarIcon className="h-4" />
               <span className="text-sm font-bold">
-                {DateTime.fromISO(selectedDate).toRelative()}
+                {parseRelativeSelectedDate(selectedDate) ?? "Today"}
               </span>
             </div>
           </Popover.Button>
@@ -74,7 +102,7 @@ function TodoForm(props: TodoFormProps) {
               className="w-28 rounded-sm bg-indigo-500 p-2 font-semibold text-white shadow-sm hover:bg-indigo-700 focus:border-indigo-700 focus:outline-indigo-700 focus:ring-4 focus:ring-indigo-700"
               type="submit"
             >
-              Add task
+              {pending ? "Adding..." : "Add task"}
             </button>
           </div>
         </div>
