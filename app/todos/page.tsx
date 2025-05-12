@@ -1,43 +1,43 @@
-import TodoForm from "../components/todos/CreateTodoForm";
-import Todo from "../components/todos/Todo";
-import { db } from "~/db";
+import { DateTime } from "luxon";
+
 import { getCurrentUser } from "~/auth/auth";
-import CheckCircleIcon from "../components/icons/CheckCircle";
+import { db } from "~/db";
+
+import ShowTodosForm from "../components/todos/ShowTodosForm";
+import TodoList from "../components/todos/TodoList";
 
 async function TodoPage() {
   const user = await getCurrentUser();
+  const overdueTodos = await db.todo.findMany({
+    where: {
+      userId: user.id,
+      dueDate: {
+        lt: DateTime.local().startOf("day").toJSDate(),
+      },
+      completed: false,
+    },
+  });
   const todos = await db.todo.findMany({
     where: {
       userId: user.id,
+      dueDate: {
+        gte: DateTime.local().startOf("day").toJSDate(),
+        lte: DateTime.local().endOf("day").toJSDate(),
+      },
+      completed: false,
     },
   });
-  return (
-    <div className="space-y-4">
-      <div className="flex flex-col">
-        <span className="text-2xl font-bold" role="heading" aria-level={1}>
-          Today
-        </span>
-        <div className="flex">
-          <div className="flex flex-row items-center">
-            <CheckCircleIcon className="h-4 text-gray-600" />
-            <span className="text-sm text-gray-600">{todos.length} tasks</span>
-          </div>
-        </div>
-      </div>
-      <div>
-        {/* TODO: handle todos empty state */}
-        {todos &&
-          todos.map((todo) => (
-            <Todo
-              key={todo.id}
-              id={todo.id}
-              title={todo.title}
-              description={todo.description ?? undefined}
-            />
-          ))}
 
-        <TodoForm />
+  return (
+    <div className="ml-6 mt-4">
+      <div className="flex flex-col">
+        <TodoList title="Overdue" todos={overdueTodos} />
+        <TodoList title="Today" todos={todos} />
       </div>
+      <ShowTodosForm
+        buttonText="Add task"
+        buttonStyles="flex flex-row items-center  text-gray-600 hover:bg-slate-300 hover:text-gray-800 pr-1.5 pt-0.5 pb-0.5"
+      />
     </div>
   );
 }

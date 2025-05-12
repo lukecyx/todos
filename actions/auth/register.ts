@@ -4,8 +4,8 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { registerUser } from "~/auth/auth";
-import { registerUserSchema } from "~/schemas/auth/register";
 import { USER_COOKIE_NAME } from "~/constants";
+import { registerUserSchema } from "~/schemas/auth/register";
 
 export async function registerAction(_: unknown, formData: unknown) {
   if (!(formData instanceof FormData)) {

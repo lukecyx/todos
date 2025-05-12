@@ -1,8 +1,10 @@
 "use server";
 
-import { createTodoSchema } from "~/schemas/todos";
-import { db } from "~/db";
+import { redirect } from "next/navigation";
+
 import { getCurrentUser } from "~/auth/auth";
+import { db } from "~/db";
+import { createTodoSchema } from "~/schemas/todos";
 
 export async function submitTodo(_: unknown, formData: unknown) {
   if (!(formData instanceof FormData)) {
@@ -12,6 +14,7 @@ export async function submitTodo(_: unknown, formData: unknown) {
   const todoObj = {
     title: formData.get("title"),
     description: formData.get("description"),
+    dueDate: formData.get("dueDate"),
   };
 
   const result = createTodoSchema.safeParse(todoObj);
@@ -30,4 +33,6 @@ export async function submitTodo(_: unknown, formData: unknown) {
       },
     },
   });
+
+  redirect("/todos");
 }

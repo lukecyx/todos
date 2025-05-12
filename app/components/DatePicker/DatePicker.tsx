@@ -1,11 +1,14 @@
 "use client";
 
-import { DateTime } from "luxon";
-import { getWeeks } from "./utils";
 import clsx from "clsx";
+import { DateTime } from "luxon";
+import { useEffect, useState } from "react";
+
 import ChevronLeft from "../icons/ChevronLeft";
 import ChevronRight from "../icons/ChevronRight";
-import { useEffect, useState } from "react";
+
+import { getWeeks } from "./utils";
+
 
 // TODO: Refactor so it's sensible
 function highlightSelectedDay(

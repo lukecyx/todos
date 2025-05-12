@@ -1,6 +1,8 @@
-import { hashPassword } from "~/auth/auth";
-import { db } from ".";
 import { faker } from "@faker-js/faker";
+
+import { hashPassword } from "~/auth/auth";
+
+import { db } from ".";
 
 /**
  * If there are already users in the db, then the db is seeded.
@@ -14,6 +16,12 @@ async function checkAlreadySeeded() {
   return true;
 }
 
+const TODO_TITLES = [
+  "Buy Groceries",
+  "Schedule dentist appointment",
+  "Reply to Sarah's email about the project",
+];
+
 async function seed() {
   return await db.user.create({
     data: {
@@ -21,9 +29,21 @@ async function seed() {
       password: hashPassword("SecretPassword1"),
       todos: {
         create: [
-          { title: faker.string.uuid(), description: faker.lorem.lines(1) },
-          { title: faker.string.uuid(), description: faker.lorem.lines(1) },
-          { title: faker.string.uuid(), description: faker.lorem.lines(1) },
+          {
+            title: TODO_TITLES[Math.floor(Math.random() * TODO_TITLES.length)],
+            description: faker.lorem.lines(1),
+            dueDate: faker.date.recent(),
+          },
+          {
+            title: TODO_TITLES[Math.floor(Math.random() * TODO_TITLES.length)],
+            description: faker.lorem.lines(1),
+            dueDate: faker.date.recent(),
+          },
+          {
+            title: TODO_TITLES[Math.floor(Math.random() * TODO_TITLES.length)],
+            description: faker.lorem.lines(1),
+            dueDate: faker.date.soon(),
+          },
         ],
       },
     },

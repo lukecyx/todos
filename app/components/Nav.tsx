@@ -1,5 +1,6 @@
-import NavLink from "./NavLink";
 import { isUserLoggedIn } from "~/auth/auth";
+
+import NavLink from "./NavLink";
 
 const leftLinks = [
   {
