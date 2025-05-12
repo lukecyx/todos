@@ -9,7 +9,6 @@ import ChevronRight from "../icons/ChevronRight";
 
 import { getWeeks } from "./utils";
 
-
 // TODO: Refactor so it's sensible
 function highlightSelectedDay(
   initialDay: DateTime,
@@ -79,15 +78,19 @@ function DatePicker({ dateHandler }) {
     <div className="space-y-2">
       <div className="mb-4 flex items-center">
         <ChevronLeft
+          className="focus:outline-none focus:ring-2 focus:ring-indigo-500"
           onClick={onClickChevronLeft}
           role="button"
           aria-label="Go to previous month"
+          tabIndex={0}
         />
         <span className="font-bold">{selectedDate?.toFormat("MMM yyyy")}</span>
         <ChevronRight
+          className="focus:outline-none focus:ring-2 focus:ring-indigo-500"
           onClick={onClickChevronRight}
           role="button"
           aria-label="Go to next month"
+          tabIndex={0}
         />
       </div>
       <div className="grid grid-cols-7 gap-2">
@@ -106,7 +109,7 @@ function DatePicker({ dateHandler }) {
             <button
               type="button"
               className={clsx(
-                "flex h-8 w-8 items-center justify-center rounded-full focus:outline-2 focus:outline-indigo-500",
+                "flex h-6 w-6 items-center justify-center rounded-full text-sm",
                 {
                   "rounded-full bg-indigo-500 text-white": highlightSelectedDay(
                     now,
@@ -115,6 +118,7 @@ function DatePicker({ dateHandler }) {
                   ),
 
                   "text-stone-400": day.month !== selectedDate?.month,
+                  "focus:outline-none focus:ring-2 focus:ring-indigo-500": true,
                 },
               )}
               onClick={onClickDay(day)}
