@@ -30,10 +30,8 @@ async function TodoPage() {
 
   return (
     <div className="ml-6 mt-4">
-      <div className="flex flex-col">
-        <TodoList title="Overdue" todos={overdueTodos} />
-        <TodoList title="Today" todos={todos} />
-      </div>
+      <TodoList title="Overdue" todos={overdueTodos} />
+      <TodoList title="Today" todos={todos} />
       <ShowTodosForm
         buttonText="Add task"
         buttonStyles="flex flex-row items-center  text-gray-600 hover:bg-slate-300 hover:text-gray-800 pr-1.5 pt-0.5 pb-0.5"

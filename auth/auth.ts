@@ -1,12 +1,12 @@
 import bcrypt from "bcrypt";
 import jwt, { TokenExpiredError } from "jsonwebtoken";
-
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
 import { USER_COOKIE_NAME } from "~/constants";
+import db from "~/db/db";
 import { type Cookie } from "~/types/auth";
 
-import db from "~/db/db";
-import { redirect } from "next/navigation";
 
 export async function registerUser(email: string, password: string) {
   const userExists = await db.user.findFirst({

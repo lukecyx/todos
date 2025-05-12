@@ -1,13 +1,19 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
-import { submitTodo } from "~/actions/todos/submitTodo";
-import DatePicker from "../DatePicker/DatePicker";
-import CalendarIcon from "../icons/Calendar";
 import { Popover } from "@headlessui/react";
 import { DateTime } from "luxon";
+import { useActionState, useState } from "react";
 
-function TodoForm() {
+import { submitTodo } from "~/actions/todos/submitTodo";
+
+import DatePicker from "../DatePicker/DatePicker";
+import CalendarIcon from "../icons/Calendar";
+
+type TodoFormProps = {
+  closeHandler: () => void;
+};
+
+function TodoForm(props: TodoFormProps) {
   const [prevState, action, pending] = useActionState(submitTodo, null);
   const [selectedDate, setSelectedDate] = useState("");
   const handleDateChange = (newDate: DateTime) => {
@@ -40,7 +46,7 @@ function TodoForm() {
             placeholder="Description"
           />
         </div>
-        <input type="hidden" name="completedByDate" value={selectedDate} />
+        <input type="hidden" name="dueDate" value={selectedDate} />
         <Popover>
           <Popover.Button>
             <div className="flex flex-row items-center space-x-2">
@@ -60,6 +66,7 @@ function TodoForm() {
             <button
               className="w-28 rounded-sm border bg-gray-200 p-2 font-semibold text-gray-800 shadow-sm hover:bg-gray-400 focus:border-gray-400 focus:outline-gray-400 focus:ring-4 focus:ring-gray-400"
               type="button"
+              onClick={props.closeHandler}
             >
               Cancel
             </button>
