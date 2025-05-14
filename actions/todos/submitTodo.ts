@@ -1,12 +1,34 @@
 "use server";
 
-import { redirect } from "next/navigation";
+import { Todo } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 
 import { getCurrentUser } from "~/auth/auth";
 import { db } from "~/db";
 import { createTodoSchema } from "~/schemas/todos";
 
-export async function submitTodo(_: unknown, formData: unknown) {
+type SubmitTodoSuccess = {
+  success: true;
+  data: Todo;
+};
+
+type PossibleFieldErrors = {
+  title?: string[] | undefined;
+  description?: string[] | undefined;
+  dueDate?: string[] | undefined;
+};
+
+type SubmitTodoError = {
+  success: false;
+  formErrors: PossibleFieldErrors;
+};
+
+type SubmitTodoResponse = Promise<SubmitTodoSuccess | SubmitTodoError>;
+
+export async function submitTodo(
+  _: unknown,
+  formData: unknown,
+): SubmitTodoResponse {
   if (!(formData instanceof FormData)) {
     throw new Error("No formData");
   }
@@ -20,12 +42,12 @@ export async function submitTodo(_: unknown, formData: unknown) {
   const result = createTodoSchema.safeParse(todoObj);
 
   if (!result.success) {
-    return result.error.formErrors;
+    return { success: false, formErrors: result.error.flatten().fieldErrors };
   }
 
   const user = await getCurrentUser();
 
-  await db.todo.create({
+  const newTodo = await db.todo.create({
     data: {
       ...result.data,
       createdBy: {
@@ -34,5 +56,7 @@ export async function submitTodo(_: unknown, formData: unknown) {
     },
   });
 
-  redirect("/todos");
+  revalidatePath("/todos");
+
+  return { success: true, data: newTodo };
 }

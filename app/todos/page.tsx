@@ -3,8 +3,8 @@ import { DateTime } from "luxon";
 import { getCurrentUser } from "~/auth/auth";
 import { db } from "~/db";
 
-import ShowTodosForm from "../components/todos/ShowTodosForm";
-import TodoList from "../components/todos/TodoList";
+import TodoContent from "../components/todos/TodoContent";
+import { serialiseTodo } from "~/utils/serialiseTodo";
 
 async function TodoPage() {
   const user = await getCurrentUser();
@@ -28,15 +28,16 @@ async function TodoPage() {
     },
   });
 
+  const serialisedTodos = todos.map((todo) => serialiseTodo(todo));
+  const serialisedOverdueTodos = overdueTodos.map((todo) =>
+    serialiseTodo(todo),
+  );
+
   return (
-    <div className="ml-6 mt-4">
-      <TodoList title="Overdue" todos={overdueTodos} />
-      <TodoList title="Today" todos={todos} />
-      <ShowTodosForm
-        buttonText="Add task"
-        buttonStyles="flex flex-row items-center  text-gray-600 hover:bg-slate-300 hover:text-gray-800 pr-1.5 pt-0.5 pb-0.5"
-      />
-    </div>
+    <TodoContent
+      iniitalTodayTodos={serialisedTodos}
+      initialOverdueTodos={serialisedOverdueTodos}
+    />
   );
 }
 
