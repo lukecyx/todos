@@ -2,7 +2,7 @@
 
 import { Popover } from "@headlessui/react";
 import { DateTime } from "luxon";
-import { useActionState, useState } from "react";
+import { FormEvent, useActionState, useState } from "react";
 
 import { submitTodo } from "~/actions/todos/submitTodo";
 
@@ -11,6 +11,7 @@ import CalendarIcon from "../icons/Calendar";
 
 type TodoFormProps = {
   closeHandler: () => void;
+  addTodoHandler: (formData: FormData) => void;
 };
 
 function TodoForm(props: TodoFormProps) {
@@ -48,9 +49,15 @@ function TodoForm(props: TodoFormProps) {
     return selAsDTRelative;
   }
 
+  function handleOnSubmit(event: FormEvent<HTMLFormElement>): void {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    props.addTodoHandler(formData);
+  }
+
   return (
     <div className="flex flex-col border bg-slate-50 shadow-md">
-      <form className="p-4" action={action}>
+      <form className="p-4" onSubmit={handleOnSubmit}>
         <div className="mb-8 space-y-2">
           <label className="sr-only" htmlFor="title">
             Title
@@ -92,14 +99,14 @@ function TodoForm(props: TodoFormProps) {
         <div className="mt-8">
           <div className="flex justify-end space-x-2">
             <button
-              className="w-28 rounded-sm border bg-gray-200 p-2 font-semibold text-gray-800 shadow-sm hover:bg-gray-400 focus:border-gray-400 focus:outline-gray-400 focus:ring-4 focus:ring-gray-400"
+              className="w-28 rounded-sm border bg-gray-200 p-2 font-semibold text-gray-800 shadow-sm hover:bg-gray-400  focus:outline-none  focus:ring-4 focus:ring-gray-400"
               type="button"
               onClick={props.closeHandler}
             >
               Cancel
             </button>
             <button
-              className="w-28 rounded-sm bg-indigo-500 p-2 font-semibold text-white shadow-sm hover:bg-indigo-700 focus:border-indigo-700 focus:outline-indigo-700 focus:ring-4 focus:ring-indigo-700"
+              className="w-28 rounded-sm bg-indigo-500 p-2 font-semibold text-white shadow-sm hover:bg-indigo-700  focus:outline-none focus:ring-4 focus:ring-indigo-700"
               type="submit"
             >
               {pending ? "Adding..." : "Add task"}

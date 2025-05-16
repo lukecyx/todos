@@ -1,7 +1,11 @@
 import { Todo as TodoPrisma } from "@prisma/client";
 
-type TodoProps = Omit<TodoPrisma, "userId" | "createdAt" | "completed"> & {
+type TodoProps = Omit<
+  TodoPrisma,
+  "userId" | "createdAt" | "completed" | "dueDate"
+> & {
   deleteHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  dueDate: string;
 };
 
 function TodoItem(props: TodoProps) {

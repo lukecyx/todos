@@ -3,7 +3,7 @@
 import { db } from "~/db";
 
 export async function completeTodo(id: string) {
-  await db.todo.update({
+  return await db.todo.update({
     where: {
       id: id,
     },
