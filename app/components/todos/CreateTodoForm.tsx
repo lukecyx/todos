@@ -83,17 +83,24 @@ function TodoForm(props: TodoFormProps) {
         </div>
         <input type="hidden" name="dueDate" value={selectedDate} />
         <Popover>
-          <Popover.Button className="pr-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            <div className="flex flex-row items-center space-x-2">
-              <CalendarIcon className="h-4" />
-              <span className="text-sm font-bold">
-                {parseRelativeSelectedDate(selectedDate) ?? "Today"}
-              </span>
-            </div>
-          </Popover.Button>
-          <Popover.Panel className="w-80 p-2 shadow">
-            <DatePicker dateHandler={handleDateChange} />
-          </Popover.Panel>
+          {({ open }) => (
+            <>
+              <Popover.Button className="pr-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <div className="flex flex-row items-center space-x-2">
+                  <CalendarIcon className="h-4" />
+                  <span className="text-sm font-bold">
+                    {parseRelativeSelectedDate(selectedDate) ?? "Today"}
+                  </span>
+                </div>
+              </Popover.Button>
+
+              {open && (
+                <Popover.Panel className="w-80 rounded bg-white p-2 shadow focus:outline-none">
+                  <DatePicker dateHandler={handleDateChange} autoFocusStart />
+                </Popover.Panel>
+              )}
+            </>
+          )}
         </Popover>
 
         <div className="mt-8">
