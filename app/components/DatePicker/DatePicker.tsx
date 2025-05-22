@@ -45,17 +45,17 @@ export default function DatePicker(props: DatePickerProps) {
   const [selectedDay, setSelectedDay] = useState<DateTime | null>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const focusedDateRef = useRef<DateTime | null>(null);
-  const leftChevronRef = useRef<SVGSVGElement>(null);
+  const leftChevronRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     buttonRef.current?.focus();
   }, [focusedDate]);
 
   useEffect(() => {
-    if (props.autoFocus && leftChevronRef.current) {
+    if (props.autoFocusStart && leftChevronRef.current) {
       leftChevronRef.current?.focus();
     }
-  }, [props.autoFocus]);
+  }, [props.autoFocusStart]);
 
   function onClickChevronLeft() {
     setSelectedDate((prev) => {
@@ -65,7 +65,7 @@ export default function DatePicker(props: DatePickerProps) {
     });
   }
 
-  function onKeyDownChevronLeft(e: React.KeyboardEvent<SVGSVGElement>) {
+  function onKeyDownChevronLeft(e: React.KeyboardEvent<HTMLButtonElement>) {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
 
@@ -85,7 +85,7 @@ export default function DatePicker(props: DatePickerProps) {
     });
   }
 
-  function onKeyDownChevronRight(e: React.KeyboardEvent<SVGSVGElement>) {
+  function onKeyDownChevronRight(e: React.KeyboardEvent<HTMLButtonElement>) {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
 
@@ -180,29 +180,34 @@ export default function DatePicker(props: DatePickerProps) {
 
   return (
     <div className="space-y-2">
-      <div className="mb-4 flex items-center">
-        {/* TODO: Wrap chevrons in buttons */}
-        <ChevronLeft
-          className="focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          ref={leftChevronRef}
-          onClick={onClickChevronLeft}
-          onKeyDown={onKeyDownChevronLeft}
-          role="button"
-          aria-label="Go to previous month"
-          tabIndex={0}
-        />
-        <span className="font-bold">{selectedDate?.toFormat("MMM yyyy")}</span>
-        <ChevronRight
-          className="focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          onClick={onClickChevronRight}
-          onKeyDown={onKeyDownChevronRight}
-          role="button"
-          aria-label="Go to next month"
-          tabIndex={0}
-        />
-        {}
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex items-center">
+          <button
+            type="button"
+            className="focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            ref={leftChevronRef}
+            onClick={onClickChevronLeft}
+            onKeyDown={onKeyDownChevronLeft}
+            aria-label="Go to previous month"
+          >
+            <ChevronLeft />
+            <span className="sr-only">Go to previous month</span>
+          </button>
+          <div className="font-bold">{selectedDate?.toFormat("MMM yyyy")}</div>
+          <button
+            type="button"
+            className="focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            onClick={onClickChevronRight}
+            onKeyDown={onKeyDownChevronRight}
+            role="button"
+            aria-label="Go to next month"
+          >
+            <ChevronRight />
+            <span className="sr-only">Go to next month</span>
+          </button>
+        </div>
         <button
-          className="flex-1 font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 w-2/5"
           type="button"
           onClick={onClickResetToday}
         >
@@ -228,8 +233,6 @@ export default function DatePicker(props: DatePickerProps) {
           week.map((day, j) => {
             const isFocusedDate = focusedDate?.hasSame(day, "day");
             const enableTabIndex = () => {
-              console.log("focusedDate", focusedDate);
-              console.log(selectedDay?.hasSame(day, "day"));
               if (!focusedDate) {
                 return now.hasSame(day, "day") ? 0 : -1;
               }
