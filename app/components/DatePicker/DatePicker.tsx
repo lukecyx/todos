@@ -247,7 +247,7 @@ export default function DatePicker(props: DatePickerProps) {
                 ref={isFocusedDate ? buttonRef : null}
                 aria-selected={selectedDay?.hasSame(day, "day")}
                 className={clsx(
-                  "flex h-6 w-6 items-center justify-center rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500",
+                  "flex h-6 w-6 items-center justify-center rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 hover:ring-2 hover:ring-indigo-500",
                   {
                     "rounded-full bg-indigo-500 text-white":
                       highlightSelectedDay(
