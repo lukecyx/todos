@@ -1,13 +1,12 @@
 "use client";
 
 import { createId } from "@paralleldrive/cuid2";
-import { Category } from "@prisma/client";
 import { DateTime } from "luxon";
 import { useState, useOptimistic, useTransition } from "react";
 
 import { completeTodo } from "~/actions/todos/completeTodo";
 import { submitTodo } from "~/actions/todos/submitTodo";
-import { CATEGORY_COLOR_MAP, SerialisedTodo } from "~/types/todo";
+import { SerialisedTodo } from "~/types/todo";
 import { serialiseTodo } from "~/utils/serialiseTodo";
 
 import PlusIcon from "../icons/Plus";
@@ -18,7 +17,6 @@ import TodoList from "./TodoList";
 type TodoContentProps = {
   iniitalTodayTodos: SerialisedTodo[];
   initialOverdueTodos: SerialisedTodo[];
-  categories: Category[];
 };
 
 export default function TodoContent(props: TodoContentProps) {
@@ -43,7 +41,7 @@ export default function TodoContent(props: TodoContentProps) {
   async function postTodo(formData: FormData) {
     startTransition(async () => {
       const now = new Date().toISOString();
-      const newTodo = {
+      const newTodo: OptimisticTodo = {
         id: createId(), // temporary ID
         title: (formData.get("title") as string) + "(Saving...)",
         dueDate: formData.get("dueDate") as string,
@@ -51,18 +49,12 @@ export default function TodoContent(props: TodoContentProps) {
         completed: false,
         createdAt: now,
         userId: "otimististicUser",
-        categoryId: "optimisticCategoryId",
-        category: {
-          name: (formData.get("category") as string) ?? "",
-          color: CATEGORY_COLOR_MAP[formData.get("category") as string],
-        },
       };
 
       addOptimisticTodayTodo(newTodo);
 
       const result = await submitTodo({}, formData);
       if (!result.success) {
-        console.error("faield to add optimistic todo", result);
       } else {
         setTodaysTodos((prev) => [...prev, serialiseTodo(result.data)]);
       }
@@ -118,7 +110,6 @@ export default function TodoContent(props: TodoContentProps) {
         <TodoForm
           closeHandler={handleShowTodosForm}
           addTodoHandler={handleAddTodo}
-          categories={props.categories}
         />
       )}
     </div>

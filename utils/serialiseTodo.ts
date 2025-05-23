@@ -1,11 +1,9 @@
 import { Todo } from "@prisma/client";
 
-import { SerialisedTodo } from "~/types/todo";
-
-export function serialiseTodo(todo: Todo): SerialisedTodo {
+export function serialiseTodo(todo: Todo) {
   return {
     ...todo,
     createdAt: todo.createdAt.toISOString(),
-    dueDate: todo.dueDate.toISOString(),
+    dueDate: todo.createdAt.toISOString(),
   };
 }

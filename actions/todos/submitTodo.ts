@@ -37,7 +37,6 @@ export async function submitTodo(
     title: formData.get("title"),
     description: formData.get("description"),
     dueDate: formData.get("dueDate"),
-    category: formData.get("category"),
   };
 
   const result = createTodoSchema.safeParse(todoObj);
@@ -48,25 +47,12 @@ export async function submitTodo(
 
   const user = await getCurrentUser();
 
-  const { category, ...rest } = result.data;
-
   const newTodo = await db.todo.create({
     data: {
-      ...rest,
+      ...result.data,
       createdBy: {
         connect: { id: user.id },
       },
-      ...(category && {
-        category: {
-          connectOrCreate: {
-            where: { name: category },
-            create: { name: category },
-          },
-        },
-      }),
-    },
-    include: {
-      category: true,
     },
   });
 

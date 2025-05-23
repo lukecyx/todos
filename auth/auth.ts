@@ -7,6 +7,7 @@ import { USER_COOKIE_NAME } from "~/constants";
 import db from "~/db/db";
 import { type Cookie } from "~/types/auth";
 
+
 export async function registerUser(email: string, password: string) {
   const userExists = await db.user.findFirst({
     where: {
@@ -65,7 +66,7 @@ export function hashPassword(password: string) {
 
 function createToken(userId: string) {
   return jwt.sign(
-    { id: userId },
+    { user: userId },
     process.env.JWT_SECRET_KEY as unknown as string,
     {
       expiresIn: "1h",
@@ -90,14 +91,12 @@ async function getUserFromToken(token: Cookie) {
   } catch (error) {
     if (error instanceof TokenExpiredError) {
       redirect("/login");
-    } else {
-      throw error;
     }
   }
 
-  return await db.user.findUnique({
+  return await db.user.findFirst({
     where: {
-      id: payload.id,
+      id: payload?.id,
     },
   });
 }
