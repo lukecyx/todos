@@ -2,9 +2,9 @@ import { DateTime } from "luxon";
 
 import { getCurrentUser } from "~/auth/auth";
 import { db } from "~/db";
+import { serialiseTodo } from "~/utils/serialiseTodo";
 
 import TodoContent from "../components/todos/TodoContent";
-import { serialiseTodo } from "~/utils/serialiseTodo";
 
 async function TodoPage() {
   const user = await getCurrentUser();
@@ -16,7 +16,15 @@ async function TodoPage() {
       },
       completed: false,
     },
+    include: {
+      category: {
+        select: {
+          name: true,
+        },
+      },
+    },
   });
+
   const todos = await db.todo.findMany({
     where: {
       userId: user.id,
@@ -26,7 +34,16 @@ async function TodoPage() {
       },
       completed: false,
     },
+    include: {
+      category: {
+        select: {
+          name: true,
+        },
+      },
+    },
   });
+
+  const categories = await db.category.findMany({});
 
   const serialisedTodos = todos.map((todo) => serialiseTodo(todo));
   const serialisedOverdueTodos = overdueTodos.map((todo) =>
@@ -37,6 +54,7 @@ async function TodoPage() {
     <TodoContent
       iniitalTodayTodos={serialisedTodos}
       initialOverdueTodos={serialisedOverdueTodos}
+      categories={categories}
     />
   );
 }

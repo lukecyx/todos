@@ -35,6 +35,7 @@ export default function TodoList(props: TodoListProps) {
                 title={todo.title}
                 description={todo.description ?? null}
                 dueDate={todo.dueDate}
+                category={todo.category}
                 deleteHandler={props.handleTodoDelete}
               />
             ))}

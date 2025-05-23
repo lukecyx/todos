@@ -54,3 +54,28 @@ export function getWeeks(now: DateTime) {
 export function isInCurrentMonth(now: DateTime, selectedDay: DateTime) {
   return selectedDay.month === now.month;
 }
+
+export function parseRelativeSelectedDate(
+  selectedDate: string | null,
+): string | null {
+  if (!selectedDate) {
+    return null;
+  }
+
+  if (!DateTime.fromISO(selectedDate).isValid) {
+    return null;
+  }
+  const selAsDT = DateTime.fromISO(selectedDate);
+  const isToday = selAsDT.toISODate() === DateTime.now().toISODate();
+
+  if (isToday) {
+    return "Today";
+  }
+
+  const selAsDTRelative = selAsDT.toRelativeCalendar();
+  if (selAsDTRelative === "tomorrow") {
+    return selAsDTRelative.slice(0, 1).toUpperCase() + selAsDTRelative.slice(1);
+  }
+
+  return selAsDTRelative;
+}
