@@ -21,6 +21,7 @@ import { parseRelativeSelectedDate } from "../DatePicker/utils";
 import CalendarIcon from "../icons/Calendar";
 import CheckIcon from "../icons/Check";
 import FlagIcon from "../icons/Flag";
+import toTitleCase from "~/utils/titleCaseString";
 
 type TodoFormProps = {
   closeHandler: () => void;
@@ -104,7 +105,9 @@ function TodoForm(props: TodoFormProps) {
               <ListboxButton>
                 <div className="flex items-center p-0 text-sm font-bold">
                   <FlagIcon className="h-4" />
-                  {selectedCategory ? selectedCategory : "Category"}
+                  {selectedCategory
+                    ? toTitleCase(selectedCategory)
+                    : "Category"}
                 </div>
               </ListboxButton>
               <ListboxOptions className="mt-2 w-28 space-y-2 rounded bg-white shadow-sm">
@@ -124,7 +127,9 @@ function TodoForm(props: TodoFormProps) {
                           },
                         )}
                       >
-                        <span className="w-4/5">{category.name}</span>
+                        <span className="w-4/5">
+                          {toTitleCase(category.name)}
+                        </span>
                         {selected && <CheckIcon className="h-4 w-4 flex-1" />}
                       </div>
                     )}

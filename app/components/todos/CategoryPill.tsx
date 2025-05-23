@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import toTitleCase from "~/utils/titleCaseString";
 
 type CategoryPillProps = {
   name: string;
@@ -14,7 +15,7 @@ export default function CategoryPill(props: CategoryPillProps) {
         "bg-yellow-300": props.name === "learning",
       })}
     >
-      <span className="p-1 text-sm font-bold">{props.name}</span>
+      <span className="p-1 text-sm font-bold">{toTitleCase(props.name)}</span>
     </div>
   );
 }
