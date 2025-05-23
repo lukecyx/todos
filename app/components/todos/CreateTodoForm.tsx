@@ -110,26 +110,24 @@ function TodoForm(props: TodoFormProps) {
                     : "Category"}
                 </div>
               </ListboxButton>
-              <ListboxOptions className="mt-2 w-28 space-y-2 rounded bg-white shadow-sm">
+              <ListboxOptions className="mt-2 w-28 space-y-2 bg-white shadow-sm rounded">
                 {props.categories?.map((category) => (
                   <ListboxOption
-                    className="w-full"
+                    className="w-full rounded-3xl"
                     key={category.id}
                     value={category.name}
                   >
                     {({ selected, focus }) => (
                       <div
                         className={clsx(
-                          "flex w-full cursor-default justify-between items-center px-2 py-1 text-center",
+                          "flex w-full cursor-default px-2 py-1 justify-center rounded",
                           {
                             "bg-indigo-400 text-white cursor-pointer font-bold":
                               focus,
                           },
                         )}
                       >
-                        <span className="w-4/5">
-                          {toTitleCase(category.name)}
-                        </span>
+                        {toTitleCase(category.name)}
                         {selected && <CheckIcon className="h-4 w-4 flex-1" />}
                       </div>
                     )}
