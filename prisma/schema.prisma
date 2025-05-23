@@ -13,9 +13,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// TODO: Add fields for anon users
+// on first site visits generate an id and store it in cookie
+// need a userType col to track anon / non anon users -- also allows users to upgrade to registered user
 model User {
   id        String   @id @default(cuid())
-  email     String
+  email     String   @unique
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -23,12 +26,20 @@ model User {
 }
 
 model Todo {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   title       String
-  description String? // @db.Text
-  createdBy   User     @relation(fields: [userId], references: [id])
+  description String?
+  createdBy   User      @relation(fields: [userId], references: [id])
   userId      String
-  createdAt   DateTime @default(now())
+  createdAt   DateTime  @default(now())
   dueDate     DateTime
-  completed   Boolean  @default(false)
+  completed   Boolean   @default(false)
+  category    Category? @relation(fields: [categoryId], references: [id])
+  categoryId  String?
+}
+
+model Category {
+  id   String @id @default(cuid())
+  name String @unique
+  Todo Todo[]
 }

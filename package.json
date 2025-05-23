@@ -11,6 +11,9 @@
     "db:studio": "pnpm dlx prisma studio",
     "db:seed": "pnpm dlx tsx db/seed.ts"
   },
+  "prisma": {
+    "seed": "bun prisma/seed.local.ts"
+  },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.758.0",
     "@headlessui/react": "^2.2.0",

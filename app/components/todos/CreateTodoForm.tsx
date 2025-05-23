@@ -1,58 +1,50 @@
 "use client";
 
-import { Popover } from "@headlessui/react";
+import {
+  Listbox,
+  ListboxButton,
+  ListboxOption,
+  ListboxOptions,
+  Popover,
+  PopoverButton,
+  PopoverPanel,
+} from "@headlessui/react";
+import { Category } from "@prisma/client";
+import clsx from "clsx";
 import { DateTime } from "luxon";
 import { FormEvent, useActionState, useState } from "react";
 
 import { submitTodo } from "~/actions/todos/submitTodo";
 
 import DatePicker from "../DatePicker/DatePicker";
+import { parseRelativeSelectedDate } from "../DatePicker/utils";
 import CalendarIcon from "../icons/Calendar";
+import CheckIcon from "../icons/Check";
+import FlagIcon from "../icons/Flag";
 
 type TodoFormProps = {
   closeHandler: () => void;
   addTodoHandler: (formData: FormData) => void;
+  categories: Category[];
 };
 
 function TodoForm(props: TodoFormProps) {
   const [prevState, action, pending] = useActionState(submitTodo, null); //eslint-disable-line
   const [selectedDate, setSelectedDate] = useState(DateTime.now().toString());
+  const [selectedCategory, setSelectedCategory] = useState("");
 
   const handleDateChange = (newDate: DateTime) => {
     setSelectedDate(newDate.toString());
   };
 
-  function parseRelativeSelectedDate(
-    selectedDate: string | null,
-  ): string | null {
-    if (!selectedDate) {
-      return null;
-    }
-
-    if (!DateTime.fromISO(selectedDate).isValid) {
-      return null;
-    }
-    const selAsDT = DateTime.fromISO(selectedDate);
-    const isToday = selAsDT.toISODate() === DateTime.now().toISODate();
-
-    if (isToday) {
-      return "Today";
-    }
-
-    const selAsDTRelative = selAsDT.toRelativeCalendar();
-    if (selAsDTRelative === "tomorrow") {
-      return (
-        selAsDTRelative.slice(0, 1).toUpperCase() + selAsDTRelative.slice(1)
-      );
-    }
-
-    return selAsDTRelative;
-  }
-
   function handleOnSubmit(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     props.addTodoHandler(formData);
+  }
+
+  function handleOnChangeCategory(e: string): void {
+    setSelectedCategory(e);
   }
 
   return (
@@ -81,27 +73,67 @@ function TodoForm(props: TodoFormProps) {
             placeholder="Description"
           />
         </div>
-        <input type="hidden" name="dueDate" value={selectedDate} />
-        <Popover>
-          {({ open }) => (
-            <>
-              <Popover.Button className="pr-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <div className="flex flex-row items-center space-x-2">
-                  <CalendarIcon className="h-4" />
-                  <span className="text-sm font-bold">
-                    {parseRelativeSelectedDate(selectedDate) ?? "Today"}
-                  </span>
-                </div>
-              </Popover.Button>
+        <div className="flex">
+          <input type="hidden" name="dueDate" value={selectedDate} />
+          <Popover>
+            {({ open }) => (
+              <div className="relative">
+                <PopoverButton className="pr-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  <div className="flex flex-row items-center space-x-2">
+                    <CalendarIcon className="h-4" />
+                    <span className="text-sm font-bold">
+                      {parseRelativeSelectedDate(selectedDate) ?? "Today"}
+                    </span>
+                  </div>
+                </PopoverButton>
 
-              {open && (
-                <Popover.Panel className="w-80 rounded bg-white p-2 shadow focus:outline-none">
-                  <DatePicker dateHandler={handleDateChange} autoFocusStart />
-                </Popover.Panel>
-              )}
-            </>
-          )}
-        </Popover>
+                {open && (
+                  <PopoverPanel className="absolute mt-2 w-80 rounded bg-white p-2 shadow focus:outline-none">
+                    <DatePicker dateHandler={handleDateChange} autoFocusStart />
+                  </PopoverPanel>
+                )}
+              </div>
+            )}
+          </Popover>
+          <div>
+            <Listbox
+              value={selectedCategory}
+              onChange={handleOnChangeCategory}
+              name="category"
+            >
+              <ListboxButton>
+                <div className="flex items-center p-0 text-sm font-bold">
+                  <FlagIcon className="h-4" />
+                  {selectedCategory ? selectedCategory : "Category"}
+                </div>
+              </ListboxButton>
+              <ListboxOptions className="mt-2 w-28 space-y-2 rounded bg-white shadow-sm">
+                {props.categories?.map((category) => (
+                  <ListboxOption
+                    className="w-full"
+                    key={category.id}
+                    value={category.name}
+                  >
+                    {({ selected, focus }) => (
+                      <div
+                        className={clsx(
+                          "flex w-full cursor-default justify-between items-center px-2 py-1 text-center",
+                          {
+                            "bg-indigo-400 text-white cursor-pointer font-bold":
+                              focus,
+                          },
+                        )}
+                      >
+                        <span className="w-4/5">{category.name}</span>
+                        {selected && <CheckIcon className="h-4 w-4 flex-1" />}
+                      </div>
+                    )}
+                  </ListboxOption>
+                ))}
+              </ListboxOptions>
+            </Listbox>
+          </div>
+        </div>
 
         <div className="mt-8">
           <div className="flex justify-end space-x-2">
