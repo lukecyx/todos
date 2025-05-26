@@ -8,7 +8,6 @@ import { loginAction } from "~/actions/auth/login";
 import OpenEyeIcon from "~/app/components/icons/Eye";
 import ClosedEyeSlashIcon from "~/app/components/icons/EyeSlash";
 
-
 function LoginForm() {
   const [state, action, pending] = useActionState(loginAction, null);
   const invalidPassword = state?.fieldErrors?.password;
@@ -41,7 +40,7 @@ function LoginForm() {
                 Email address
               </label>
               <input
-                className="rounded border-gray-300 bg-slate-50 shadow focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500  "
+                className="rounded border-gray-300 bg-slate-50 shadow focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400  "
                 name="email"
                 type="email"
                 required
@@ -61,7 +60,7 @@ function LoginForm() {
                 <input
                   name="password"
                   className={clsx(
-                    "w-full rounded border-gray-300 bg-slate-50 pr-10 shadow focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500",
+                    "w-full rounded border-gray-300 bg-slate-50 pr-10 shadow focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400",
                     {
                       "border border-red-500 outline-red-500 focus:border-red-500 focus:ring-red-500":
                         invalidPassword,
@@ -106,7 +105,7 @@ function LoginForm() {
           </div>
           <div>
             <button
-              className="w-full rounded bg-indigo-500 p-2 font-semibold text-white shadow-sm hover:bg-indigo-700 focus:border-indigo-700 focus:outline-indigo-700 focus:ring-4 focus:ring-indigo-700"
+              className="w-full rounded bg-indigo-400 p-2 font-semibold text-white shadow-sm hover:bg-indigo5600 focus:border-indigo-500 focus:outline-indigo-500 focus:ring-2 focus:ring-indigo-500"
               type="submit"
             >
               {pending ? "Loading..." : "Login"}
@@ -116,7 +115,7 @@ function LoginForm() {
             {links.map((link) => (
               <Link
                 key={link.label}
-                className="text-indigo-500 hover:text-indigo-700"
+                className="text-indigo-500 hover:text-indigo-600"
                 href={link.href}
               >
                 {link.label}

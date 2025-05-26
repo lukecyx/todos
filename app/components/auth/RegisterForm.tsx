@@ -23,7 +23,7 @@ function RegisterForm() {
                 Email address
               </label>
               <input
-                className="rounded border-gray-300 bg-slate-50 shadow focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500  "
+                className="rounded border-gray-300 bg-slate-50 shadow focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600"
                 name="email"
                 type="email"
                 required
@@ -58,7 +58,7 @@ function RegisterForm() {
             ))}
           <div>
             <button
-              className="w-full rounded bg-indigo-500 p-2 font-semibold text-white shadow-sm hover:bg-indigo-700 focus:border-indigo-700 focus:outline-indigo-700 focus:ring-4 focus:ring-indigo-700"
+              className="w-full rounded bg-indigo-500 p-2 font-semibold text-white shadow-sm hover:bg-indigo-700 focus:border-indigo-700 focus:outline-indigo-600 focus:ring-2 focus:ring-indigo-600"
               type="submit"
             >
               {pending ? "Loading..." : "Register"}
