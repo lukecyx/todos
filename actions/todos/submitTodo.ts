@@ -4,7 +4,7 @@ import { Todo } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 import { getCurrentUser } from "~/auth/auth";
-import { db } from "~/db";
+import createTodo from "~/lib/todos/createTodo";
 import { createTodoSchema } from "~/schemas/todos";
 
 type SubmitTodoSuccess = {
@@ -50,24 +50,19 @@ export async function submitTodo(
 
   const { category, ...rest } = result.data;
 
-  const newTodo = await db.todo.create({
-    data: {
-      ...rest,
-      createdBy: {
-        connect: { id: user.id },
-      },
-      ...(category && {
-        category: {
-          connectOrCreate: {
-            where: { name: category },
-            create: { name: category },
-          },
+  const newTodo = await createTodo({
+    ...rest,
+    createdBy: {
+      connect: { id: user.id },
+    },
+    ...(category && {
+      category: {
+        connectOrCreate: {
+          where: { name: category },
+          create: { name: category },
         },
-      }),
-    },
-    include: {
-      category: true,
-    },
+      },
+    }),
   });
 
   revalidatePath("/todos");
