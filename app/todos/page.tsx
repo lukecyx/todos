@@ -1,14 +1,16 @@
 import { DateTime } from "luxon";
 
 import { getCurrentUser } from "~/auth/auth";
-import { db } from "~/db";
+import { getAllCategories } from "~/lib/categories";
+import { getManyTodos } from "~/lib/todos";
 import { serialiseTodo } from "~/utils/serialiseTodo";
 
 import TodoContent from "../components/todos/TodoContent";
 
 async function TodoPage() {
   const user = await getCurrentUser();
-  const overdueTodos = await db.todo.findMany({
+
+  const overdueTodos = await getManyTodos({
     where: {
       userId: user.id,
       dueDate: {
@@ -25,7 +27,7 @@ async function TodoPage() {
     },
   });
 
-  const todos = await db.todo.findMany({
+  const todos = await getManyTodos({
     where: {
       userId: user.id,
       dueDate: {
@@ -43,7 +45,7 @@ async function TodoPage() {
     },
   });
 
-  const categories = await db.category.findMany({});
+  const categories = await getAllCategories();
 
   const serialisedTodos = todos.map((todo) => serialiseTodo(todo));
   const serialisedOverdueTodos = overdueTodos.map((todo) =>

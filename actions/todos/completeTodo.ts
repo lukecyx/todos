@@ -1,14 +1,7 @@
 "use server";
 
-import { db } from "~/db";
+import { updateUniqueTodo } from "~/lib/todos";
 
 export async function completeTodo(id: string) {
-  return await db.todo.update({
-    where: {
-      id: id,
-    },
-    data: {
-      completed: true,
-    },
-  });
+  return await updateUniqueTodo({ id }, { completed: true });
 }
