@@ -25,7 +25,7 @@ function TodoItem(props: TodoProps) {
             name="selectedTodo"
             type="checkbox"
             value={props.id}
-            className="mt-1 h-4 rounded-full text-indigo-500 focus:ring-indigo-700"
+            className="mt-1 h-4 rounded-full text-indigo-400 focus:ring-indigo-400 focus:ring-2"
             onChange={props.deleteHandler}
           />
           {props.category && <CategoryPill name={props.category?.name} />}

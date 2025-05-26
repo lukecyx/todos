@@ -5,7 +5,7 @@ import { getAllCategories } from "~/lib/categories";
 import { getManyTodos } from "~/lib/todos";
 import { serialiseTodo } from "~/utils/serialiseTodo";
 
-import TodoContent from "../components/todos/TodoContent";
+import TodoContent from "../components/Todos/TodoContent";
 
 async function TodoPage() {
   const user = await getCurrentUser();
