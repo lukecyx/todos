@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 
-import { getCurrentUser } from "~/auth/auth";
+import { getCurrentUser } from "~/lib/auth/auth";
 import { getAllCategories } from "~/lib/categories";
 import { getManyTodos } from "~/lib/todos";
 import { serialiseTodo } from "~/utils/serialiseTodo";

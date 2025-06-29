@@ -1,4 +1,4 @@
-import { isUserLoggedIn } from "~/auth/auth";
+import { isUserLoggedIn } from "~/lib/auth/auth";
 
 import NavLink from "./NavLink";
 

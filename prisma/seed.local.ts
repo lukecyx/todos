@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 
-import { hashPassword } from "~/auth/auth";
+import { hashPassword } from "~/lib/auth/auth";
 import { db } from "~/db";
 import { TODO_CATEGORIES } from "~/types/todo";
 

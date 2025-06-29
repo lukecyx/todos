@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { registerUser } from "~/auth/auth";
+import { registerUser } from "~/lib/auth/auth";
 import { USER_COOKIE_NAME } from "~/constants";
 import { registerUserSchema } from "~/schemas/auth/register";
 

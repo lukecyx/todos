@@ -3,7 +3,7 @@
 import { Todo } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
-import { getCurrentUser } from "~/auth/auth";
+import { getCurrentUser } from "~/lib/auth/auth";
 import createTodo from "~/lib/todos/createTodo";
 import { createTodoSchema } from "~/schemas/todos";
 
