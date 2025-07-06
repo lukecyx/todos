@@ -45,8 +45,23 @@ data "template_file" "install_software" {
   template = file("${path.module}/scripts/install-bastion-software.yaml")
 }
 
+data "aws_ami" "amazon_linux_arm64" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-arm64-gp2"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["arm64"]
+  }
+
+  owners = ["amazon"]
+}
 resource "aws_instance" "bastion" {
-  ami                         = "ami-02a6c118d4f9a1ba0"
+  ami                         = data.aws_ami.amazon_linux_arm64.id
   instance_type               = "t4g.nano"
   vpc_security_group_ids      = [aws_security_group.ec2_sg.id]
   subnet_id                   = var.subnet
