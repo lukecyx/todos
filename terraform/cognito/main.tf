@@ -36,9 +36,7 @@ resource "aws_cognito_user_pool_client" "main_user_pool_client" {
   generate_secret = false
 }
 
-
-# resource "aws_cognito_user_pool_domain" "main_user_pool_domain" {
-#   domain = var.domain_name
-#
-#   user_pool_id = aws_cognito_user_pool.main_user_pool.id
-# }
+resource "aws_cognito_user_pool_domain" "main_user_pool_domain" {
+  domain       = "myapp-myauth"
+  user_pool_id = aws_cognito_user_pool.main_user_pool.id
+}
